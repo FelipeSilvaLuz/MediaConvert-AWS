@@ -1,0 +1,51 @@
+﻿@{
+    ViewData["Title"] = "Uploads";
+    var jobs = ViewBag.Jobs ?? null;
+}
+
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+    <div class="form-group">
+        <input type="file" class="form-control" id="file" name="file" />
+    </div>
+</div>
+<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="margin-top:3px">
+    <div class="form-group" style="float: right;">
+        <button type="button" class="btn btn-success" id="uploadMedia">UPLOAD</button>
+    </div>
+</div>
+
+<table class="table table-striped">
+    <tr>
+        <th>Data de Criação</th>
+        <th>Arquivo</th>
+        <th>Job Status</th>
+        <th>Ver Video</th>
+        <th>Download</th>
+        <th>Excluir</th>
+    </tr>
+
+    @foreach (var item in jobs)
+    {
+        <tr>
+            <td>@item.CreatedAt</td>
+            <td>@item.Settings.Inputs[0].FileInput</td>
+            <td>@item.Status</td>
+            @if (item.Status == "COMPLETE")
+            {
+                <td><a asp-action="ExecutarMidia" asp-controller="Home" asp-route-id="@item.Id" asp-route-name="@item.Settings.Inputs[0].FileInput">Ver Video</a></td>
+                <td><a asp-action="DownloadMidia" asp-controller="Home" asp-route-arquivo="@item.Settings.Inputs[0].FileInput">Download</a></td>
+                <td><a asp-action="ExcluirMidia" asp-controller="Home" asp-route-arquivo="@item.Settings.Inputs[0].FileInput" asp-route-id="@item.Id">Excluir</a></td>
+            }
+            else
+            {
+                <td></td>
+                <td><a asp-action="DownloadMidia" asp-controller="Home" asp-route-arquivo="@item.Settings.Inputs[0].FileInput">Download</a></td>
+                <td><a asp-action="ExcluirMidia" asp-controller="Home" asp-route-arquivo="@item.Settings.Inputs[0].FileInput">Excluir</a></td>
+            }
+        </tr>
+    }
+</table>
+
+@Html.Hidden("urlGuardarArquivo", Url.Action("IncluirMidia", "Home"))
+
+<script src="~/js/upload.js"></script>
